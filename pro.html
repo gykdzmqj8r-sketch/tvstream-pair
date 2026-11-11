@@ -87,6 +87,7 @@
       <h2 data-i18n="activeTitle">O Pro está ativo nesta TV</h2>
       <p id="active-text"></p>
       <a id="portal" class="secondary hidden" href="#" rel="noopener" data-i18n="manage">Gerenciar assinatura</a>
+      <p id="no-portal" class="fine hidden" data-i18n="noPortal">Para trocar o cartão ou cancelar, fale com o suporte pelo e-mail do recibo.</p>
     </section>
 
     <section id="thanks" class="card hidden">
@@ -121,7 +122,7 @@
       monthly: "equivale a {m} por mês", pay: "Assinar · {p}", soon: "Pagamento disponível em breve",
       perk1: "Todos os recursos do Sofá TV, sem limite", perk2: "Vale para esta TV (1 TV por assinatura)",
       perk3: "Renovação automática. Cancele quando quiser", secure: "Pagamento seguro pela Stripe.",
-      activeTitle: "O Pro está ativo nesta TV", renews: "{plan} · renova em {d}", until: "{plan} · válido até {d}",
+      activeTitle: "O Pro está ativo nesta TV", mine: "Sua assinatura", noPortal: "Para trocar o cartão ou cancelar, fale com o suporte pelo e-mail do recibo.", renews: "{plan} · renova em {d}", until: "{plan} · válido até {d}",
       manage: "Gerenciar assinatura", thanksTitle: "Pagamento recebido!",
       thanksText: "A TV libera sozinha em alguns segundos. Pode voltar para o sofá.",
       problemTitle: "Não encontramos esta TV", problemText: "Abra de novo o QR Code mostrado na tela da TV.",
@@ -136,7 +137,7 @@
       monthly: "about {m} per month", pay: "Subscribe · {p}", soon: "Payment available soon",
       perk1: "Every Sofá TV feature, no limits", perk2: "For this TV (1 TV per subscription)",
       perk3: "Renews automatically. Cancel anytime", secure: "Secure payment by Stripe.",
-      activeTitle: "Pro is active on this TV", renews: "{plan} · renews on {d}", until: "{plan} · valid until {d}",
+      activeTitle: "Pro is active on this TV", mine: "Your subscription", noPortal: "To change your card or cancel, reply to the receipt email.", renews: "{plan} · renews on {d}", until: "{plan} · valid until {d}",
       manage: "Manage subscription", thanksTitle: "Payment received!",
       thanksText: "The TV unlocks by itself in a few seconds. Back to the couch.",
       problemTitle: "We couldn't find this TV", problemText: "Scan the QR code on the TV screen again.",
@@ -151,7 +152,7 @@
       monthly: "equivale a {m} por mes", pay: "Suscribirse · {p}", soon: "Pago disponible pronto",
       perk1: "Todas las funciones de Sofá TV, sin límites", perk2: "Para esta TV (1 TV por suscripción)",
       perk3: "Renovación automática. Cancela cuando quieras", secure: "Pago seguro con Stripe.",
-      activeTitle: "Pro está activo en esta TV", renews: "{plan} · se renueva el {d}", until: "{plan} · válido hasta {d}",
+      activeTitle: "Pro está activo en esta TV", mine: "Tu suscripción", noPortal: "Para cambiar la tarjeta o cancelar, responde el correo del recibo.", renews: "{plan} · se renueva el {d}", until: "{plan} · válido hasta {d}",
       manage: "Administrar suscripción", thanksTitle: "¡Pago recibido!",
       thanksText: "La TV se desbloquea sola en unos segundos. Vuelve al sofá.",
       problemTitle: "No encontramos esta TV", problemText: "Escanea de nuevo el código QR de la pantalla de la TV.",
@@ -256,7 +257,10 @@
     if (data.status === "active") {
       session(t("active") + " · " + t("tv", { c: code }), "ok");
       $("active-text").textContent = t(data.canceled ? "until" : "renews", { plan: planName, d: date(data.paid_until) });
+      document.querySelector("h1").textContent = t("mine");
+      document.title = t("mine") + " · Sofá TV Pro";
       if (data.portal_url) { $("portal").href = data.portal_url; show("portal", true); }
+      else { show("no-portal", true); }
       show("active", true);
       return;
     }
