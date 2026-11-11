@@ -3,53 +3,384 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>TV Stream — Enviar lista</title>
+  <meta name="theme-color" content="#0e1215">
+  <title>Sofá TV — Enviar lista</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    *{box-sizing:border-box} body{margin:0;min-height:100vh;background:#090c12;color:#f7f8fb;font-family:Arial,Helvetica,sans-serif}
-    .page{width:calc(100% - 28px);max-width:620px;margin:0 auto;padding:28px 0 52px}
-    .brand{display:flex;align-items:center;margin-bottom:24px}.logo{width:58px;height:58px;margin-right:14px;display:flex;align-items:center;justify-content:center;border-radius:18px;background:linear-gradient(135deg,#7b61ff,#42a5ff);font-weight:800;font-size:21px}
-    h1{margin:0;font-size:27px}.muted{margin-top:5px;color:#98a0b3;line-height:1.5}.card{padding:22px;border:1px solid rgba(255,255,255,.10);border-radius:22px;background:#121621}
-    .session{margin-bottom:18px;padding:13px 14px;border-radius:12px;background:rgba(255,255,255,.05);color:#a4acbb;font-size:13px;line-height:1.45}.session.ok{border:1px solid rgba(91,214,138,.25);color:#a9e7bd}.session.error{border:1px solid rgba(255,117,134,.25);color:#ffadb8}
-    label{display:block;margin:16px 0 7px;color:#ccd1dd;font-size:13px;font-weight:700}input{width:100%;min-height:50px;padding:13px 14px;border:2px solid transparent;border-radius:13px;outline:none;background:#0d111a;color:white;font-size:16px}input:focus{border-color:#8f7cff}
-    button{width:100%;min-height:54px;margin-top:20px;border:0;border-radius:14px;background:linear-gradient(135deg,#7b61ff,#5e7cff);color:white;font-size:17px;font-weight:800}button:disabled{opacity:.5}
-    .separator{display:flex;align-items:center;margin:24px 0 5px;color:#727b8d;font-size:11px}.separator:before,.separator:after{content:"";height:1px;flex:1;background:rgba(255,255,255,.10)}.separator span{padding:0 10px}
-    .preview{display:none;margin-top:13px;padding:12px 14px;border-radius:12px;background:#0c1119;color:#a9b2c2;font-size:13px;line-height:1.5}.preview.show{display:block}.status{min-height:26px;margin-top:16px;color:#b8c0cf;line-height:1.5}.status.ok{color:#8ee0a7}.status.error{color:#ff8f9e}.small{margin-top:18px;color:#737d90;font-size:12px;line-height:1.5}
+    /* Mesmo sistema visual do app na TV ("Horizonte refinado"). */
+    :root {
+      --c-bg: #0e1215;
+      --c-surface-1: #161b20;
+      --c-surface-2: #1e252b;
+      --c-line: rgba(255, 255, 255, .08);
+      --c-line-strong: #3a444d;
+      --c-text: #f4f1ea;
+      --c-text-2: #b7bec4;
+      --c-text-3: #8a949c;
+      --c-accent: #f2b85d;
+      --c-accent-soft: rgba(242, 184, 93, .14);
+      --c-accent-ink: #1a1408;
+      --c-success: #5ccb8a;
+      --c-live: #ff5a5f;
+      --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--c-bg);
+      color: var(--c-text);
+      font-family: var(--font-ui);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+    .page {
+      width: 100%;
+      max-width: 560px;
+      margin: 0 auto;
+      padding: calc(28px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));
+    }
+
+    /* Cabeçalho: marca + título, como na tela "Configurar lista". */
+    .brand { display: flex; align-items: center; margin-bottom: 22px; }
+    .brand-mark {
+      flex: 0 0 auto;
+      width: 58px; height: 58px;
+      margin-right: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand-mark svg { width: 58px; height: 55px; }
+    .eyebrow {
+      display: block;
+      color: var(--c-accent);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+    }
+    h1 { margin: 2px 0 0; font-size: 24px; font-weight: 700; line-height: 1.2; letter-spacing: -.2px; }
+    .lead { margin: 0 0 20px; color: var(--c-text-2); }
+
+    /* Situação da sessão da TV. */
+    .session {
+      display: flex; align-items: center;
+      min-height: 44px;
+      margin-bottom: 18px;
+      padding: 10px 14px;
+      border: 1px solid var(--c-line);
+      border-radius: 999px;
+      background: var(--c-surface-1);
+      color: var(--c-text-2);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .session-dot {
+      flex: 0 0 auto;
+      width: 10px; height: 10px;
+      margin-right: 10px;
+      border-radius: 50%;
+      background: var(--c-text-3);
+    }
+    .session.ok .session-dot { background: var(--c-success); box-shadow: 0 0 0 4px rgba(92, 203, 138, .18); }
+    .session.error { color: #ffb3b5; border-color: rgba(255, 90, 95, .3); }
+    .session.error .session-dot { background: var(--c-live); }
+
+    .card {
+      padding: 20px;
+      border: 1px solid var(--c-line);
+      border-radius: 16px;
+      background: var(--c-surface-1);
+    }
+
+    /* Escolha entre Xtream e M3U: a mesma da TV. */
+    .list-type { display: flex; margin-bottom: 18px; }
+    .list-type button {
+      flex: 1 1 0;
+      height: 48px;
+      border: 2px solid var(--c-line);
+      border-radius: 12px;
+      background: var(--c-bg);
+      color: var(--c-text-2);
+      font: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .list-type button + button { margin-left: 10px; }
+    .list-type button[aria-checked="true"] {
+      border-color: var(--c-accent);
+      background: var(--c-accent-soft);
+      color: var(--c-text);
+    }
+
+    .field { margin-bottom: 14px; }
+    label { display: block; margin: 0 0 7px; color: var(--c-text); font-size: 13px; font-weight: 600; }
+    input {
+      width: 100%;
+      height: 50px;
+      padding: 0 14px;
+      border: 2px solid var(--c-line);
+      border-radius: 12px;
+      outline: none;
+      background: var(--c-bg);
+      color: var(--c-text);
+      font: inherit;
+      font-size: 16px; /* 16px evita o zoom automático do iPhone */
+    }
+    input::placeholder { color: var(--c-text-3); }
+    input:focus { border-color: var(--c-accent); }
+    .hint { margin: 7px 0 0; color: var(--c-text-3); font-size: 12.5px; }
+    .detected {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--c-surface-2);
+      color: var(--c-text-2);
+      font-size: 13px;
+      word-break: break-all;
+    }
+    .detected.show { display: block; }
+    .panel[hidden] { display: none; }
+
+    .primary {
+      display: block;
+      width: 100%;
+      height: 54px;
+      margin-top: 6px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--c-accent);
+      color: var(--c-accent-ink);
+      font: inherit;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .primary:disabled { opacity: .45; cursor: default; }
+    .primary:not(:disabled):active { transform: scale(.99); }
+
+    .status { min-height: 22px; margin-top: 14px; color: var(--c-text-2); font-size: 14px; }
+    .status:empty { min-height: 0; margin-top: 0; }
+    .status.ok { color: var(--c-success); }
+    .status.error { color: #ffb3b5; }
+
+    .security {
+      display: flex; align-items: flex-start;
+      margin-top: 18px;
+      color: var(--c-text-3);
+      font-size: 12.5px;
+    }
+    .security svg { flex: 0 0 auto; width: 16px; height: 16px; margin: 1px 9px 0 0; color: var(--c-success); }
   </style>
 </head>
 <body>
   <main class="page">
-    <div class="brand"><div class="logo">TV</div><div><h1>Enviar lista para a TV</h1><div class="muted">Cole a URL e toque em enviar. A TV fará o restante.</div></div></div>
-    <div class="card">
-      <div id="session-info" class="session">Verificando a sessão da TV...</div>
-      <form id="pair-form">
-        <label for="m3u">Link M3U completo</label>
-        <input id="m3u" type="url" inputmode="url" placeholder="http://servidor/get.php?username=...&password=...">
-        <div id="preview" class="preview"></div>
-        <div class="separator"><span>OU PREENCHA MANUALMENTE</span></div>
-        <label for="server">Servidor</label><input id="server" type="text" inputmode="url" placeholder="http://servidor.com:porta">
-        <label for="username">Usuário</label><input id="username" type="text" autocomplete="username" placeholder="Usuário">
-        <label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" placeholder="Senha">
-        <button id="send-button" type="submit" disabled>Enviar para a TV</button>
-      </form>
-      <div id="status" class="status"></div>
-      <div class="small">A sessão dura 15 minutos. Se os dados estiverem incorretos, corrija e envie novamente pelo mesmo QR enquanto ele estiver válido.</div>
+    <header class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <!-- Mesmo logo do app na TV (images/logo-sofa-tv.svg). -->
+        <svg viewBox="0 -4 200 190"><g transform="translate(30 0)"><path d="M4 6L4 52L44 29Z" fill="#f2b85d" stroke="#f2b85d" stroke-width="8" stroke-linejoin="round"/><g fill="#f4f1ea" transform="translate(66 6) skewX(-12)"><path d="M0 0H38V11H24.5V48H13.5V11H0Z"/><path d="M40 0H52L59.5 34L67 0H79L65.5 48H53.5Z"/></g></g><g transform="translate(0 76)"><g fill="#f4f1ea" stroke="#0e1215" stroke-width="5" paint-order="stroke"><rect x="42" y="0" width="57" height="54" rx="19"/><rect x="101" y="0" width="57" height="54" rx="19"/><rect x="38" y="51" width="124" height="25" rx="7"/><rect x="22" y="74" width="156" height="15" rx="6"/><rect x="12" y="30" width="36" height="58" rx="17"/><rect x="152" y="30" width="36" height="58" rx="17"/></g><path d="M38 91L32 106M162 91L168 106" stroke="#f4f1ea" stroke-width="7" stroke-linecap="round"/></g></svg>
+      </div>
+      <div>
+        <span class="eyebrow">Sofá TV</span>
+        <h1>Enviar lista para a TV</h1>
+      </div>
+    </header>
+    <p class="lead">Escolha o tipo da sua lista, preencha e toque em enviar. A TV entra sozinha.</p>
+
+    <div id="session-info" class="session" role="status">
+      <span class="session-dot"></span><span id="session-text">Verificando a TV...</span>
     </div>
+
+    <form id="pair-form" class="card" autocomplete="off" novalidate>
+      <div class="list-type" role="radiogroup" aria-label="Tipo de lista">
+        <button type="button" data-type="xtream" role="radio" aria-checked="false">Xtream</button>
+        <button type="button" data-type="m3u" role="radio" aria-checked="true">M3U</button>
+      </div>
+
+      <div id="panel-m3u" class="panel">
+        <div class="field">
+          <label for="m3u">Endereço da lista M3U</label>
+          <input id="m3u" type="url" inputmode="url" spellcheck="false" autocapitalize="off"
+                 placeholder="http://servidor.com/lista.m3u">
+          <p class="hint">Links de painel (get.php com usuário e senha) também funcionam: a TV usa o painel direto e traz capas e sinopses.</p>
+          <div id="m3u-detected" class="detected"></div>
+        </div>
+      </div>
+
+      <div id="panel-xtream" class="panel" hidden>
+        <div class="field">
+          <label for="server">Servidor / Provedor</label>
+          <input id="server" type="url" inputmode="url" spellcheck="false" autocapitalize="off"
+                 placeholder="http://servidor.com:porta">
+        </div>
+        <div class="field">
+          <label for="username">Usuário</label>
+          <input id="username" type="text" autocomplete="username" spellcheck="false" autocapitalize="off"
+                 placeholder="Usuário">
+        </div>
+        <div class="field">
+          <label for="password">Senha</label>
+          <input id="password" type="password" autocomplete="current-password" placeholder="Senha">
+        </div>
+      </div>
+
+      <button id="send-button" class="primary" type="submit" disabled>Enviar para a TV</button>
+      <div id="status" class="status" role="status"></div>
+
+      <div class="security">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 9.5-4-1.2-7-5-7-9.5V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+        <span>O QR traz só um código temporário, válido por 15 minutos. Se algo estiver errado, corrija e envie de novo pelo mesmo QR.</span>
+      </div>
+    </form>
   </main>
 <script>
-(function(){
+(function () {
   "use strict";
-  var SUPABASE_URL="https://gkaetterrcvugooiyonz.supabase.co";
-  var SUPABASE_KEY="sb_publishable_OgLipmaU1MX_Io8kUmBlZA_7u0HnyFc";
-  var params=new URLSearchParams(location.search); var token=params.get("t")||"";
-  function $(id){return document.getElementById(id)}
-  function setStatus(text,type){var e=$("status");e.textContent=text||"";e.className="status"+(type?" "+type:"")}
-  function rpc(name,payload){return new Promise(function(resolve,reject){var x=new XMLHttpRequest();x.open("POST",SUPABASE_URL+"/rest/v1/rpc/"+name,true);x.timeout=15000;x.setRequestHeader("Content-Type","application/json");x.setRequestHeader("apikey",SUPABASE_KEY);x.onreadystatechange=function(){if(x.readyState!==4)return;if(x.status>=200&&x.status<300){try{resolve(x.responseText?JSON.parse(x.responseText):null)}catch(e){resolve(x.responseText)}return}reject(new Error("HTTP "+x.status+(x.responseText?" • "+x.responseText.slice(0,180):"")))};x.onerror=function(){reject(new Error("Sem conexão com o Supabase."))};x.ontimeout=function(){reject(new Error("Tempo limite de conexão."))};x.send(JSON.stringify(payload||{}))})}
-  function parseM3U(value){value=String(value||"").trim();if(!value)return null;try{var u=new URL(value);var user=u.searchParams.get("username"),pass=u.searchParams.get("password");if(!user||!pass)return null;return{server:u.protocol+"//"+u.host,username:user,password:pass}}catch(e){return null}}
-  function updatePreview(){var p=parseM3U($("m3u").value),box=$("preview");if(!p){box.className="preview";box.textContent="";return}box.className="preview show";box.textContent="Detectado: "+p.server+" • usuário "+p.username}
-  $("m3u").addEventListener("input",updatePreview);
-  if(!token){$("session-info").className="session error";$("session-info").textContent="QR inválido: token ausente.";return}
-  rpc("tv_pair_check_v2",{p_token:token}).then(function(data){if(!data||data.ok!==true)throw new Error(data&&data.message?data.message:"Sessão inválida");$("session-info").className="session ok";$("session-info").textContent="TV encontrada. Sessão válida e pronta para receber a lista.";$("send-button").disabled=false}).catch(function(err){$("session-info").className="session error";$("session-info").textContent="Não foi possível validar a TV: "+(err.message||err);setStatus("Na TV, gere um novo QR e escaneie novamente.","error")});
-  $("pair-form").addEventListener("submit",function(e){e.preventDefault();var parsed=parseM3U($("m3u").value);var server=parsed?parsed.server:$("server").value.trim();var username=parsed?parsed.username:$("username").value.trim();var password=parsed?parsed.password:$("password").value;if(!server||!username||!password){setStatus("Cole uma URL M3U válida ou preencha os três campos.","error");return}if(!/^https?:\/\//i.test(server))server="http://"+server;var btn=$("send-button");btn.disabled=true;btn.textContent="Enviando...";setStatus("Enviando para a TV...");rpc("tv_pair_submit_v2",{p_token:token,p_server:server,p_username:username,p_password:password}).then(function(data){if(!data||data.ok!==true)throw new Error(data&&data.message?data.message:"Envio recusado");setStatus("Enviado com sucesso. Olhe para a TV: ela deve iniciar o login em poucos segundos.","ok");btn.textContent="Enviar novamente";btn.disabled=false}).catch(function(err){setStatus("Falha ao enviar: "+(err.message||err),"error");btn.textContent="Tentar novamente";btn.disabled=false})});
+  var SUPABASE_URL = "https://gkaetterrcvugooiyonz.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_OgLipmaU1MX_Io8kUmBlZA_7u0HnyFc";
+  var token = new URLSearchParams(location.search).get("t") || "";
+  var listType = "m3u";
+  var sessionOk = false;
+
+  function $(id) { return document.getElementById(id); }
+
+  function setStatus(text, type) {
+    var el = $("status");
+    el.textContent = text || "";
+    el.className = "status" + (type ? " " + type : "");
+  }
+
+  function setSession(text, type) {
+    $("session-info").className = "session" + (type ? " " + type : "");
+    $("session-text").textContent = text;
+  }
+
+  function rpc(name, payload) {
+    return new Promise(function (resolve, reject) {
+      var x = new XMLHttpRequest();
+      x.open("POST", SUPABASE_URL + "/rest/v1/rpc/" + name, true);
+      x.timeout = 15000;
+      x.setRequestHeader("Content-Type", "application/json");
+      x.setRequestHeader("apikey", SUPABASE_KEY);
+      x.onreadystatechange = function () {
+        if (x.readyState !== 4) return;
+        if (x.status >= 200 && x.status < 300) {
+          try { resolve(x.responseText ? JSON.parse(x.responseText) : null); } catch (e) { resolve(x.responseText); }
+          return;
+        }
+        reject(new Error("HTTP " + x.status + (x.responseText ? " • " + x.responseText.slice(0, 180) : "")));
+      };
+      x.onerror = function () { reject(new Error("Sem conexão com o serviço de pareamento.")); };
+      x.ontimeout = function () { reject(new Error("O serviço demorou para responder.")); };
+      x.send(JSON.stringify(payload || {}));
+    });
+  }
+
+  function withScheme(value) {
+    value = String(value || "").trim();
+    return value && !/^https?:\/\//i.test(value) ? "http://" + value : value;
+  }
+
+  /* Link de painel Xtream: .../get.php?username=X&password=Y */
+  function panelFromLink(value) {
+    try {
+      var u = new URL(withScheme(value));
+      var user = u.searchParams.get("username"), pass = u.searchParams.get("password");
+      if (!user || !pass) return null;
+      var path = u.pathname.replace(/\/get\.php$/i, "").replace(/\/+$/, "");
+      return { server: u.protocol + "//" + u.host + path, username: user, password: pass };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setType(type) {
+    listType = type === "xtream" ? "xtream" : "m3u";
+    Array.prototype.forEach.call(document.querySelectorAll(".list-type button"), function (b) {
+      b.setAttribute("aria-checked", b.getAttribute("data-type") === listType ? "true" : "false");
+    });
+    $("panel-m3u").hidden = listType !== "m3u";
+    $("panel-xtream").hidden = listType !== "xtream";
+    setStatus("");
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".list-type button"), function (b) {
+    b.addEventListener("click", function () { setType(b.getAttribute("data-type")); });
+  });
+
+  $("m3u").addEventListener("input", function () {
+    var p = panelFromLink($("m3u").value), box = $("m3u-detected");
+    box.className = "detected" + (p ? " show" : "");
+    box.textContent = p ? "Painel detectado: " + p.server.replace(/^https?:\/\//, "") + " · usuário " + p.username : "";
+  });
+
+  /* Colou o link inteiro no campo Servidor: separa usuário e senha. */
+  $("server").addEventListener("input", function () {
+    var p = panelFromLink($("server").value);
+    if (!p) return;
+    $("server").value = p.server;
+    $("username").value = p.username;
+    $("password").value = p.password;
+    setStatus("Link de painel separado em servidor, usuário e senha.", "ok");
+  });
+
+  if (!token) {
+    setSession("QR inválido: abra pelo QR da TV.", "error");
+    return;
+  }
+
+  rpc("tv_pair_check_v2", { p_token: token }).then(function (data) {
+    if (!data || data.ok !== true) throw new Error(data && data.message ? data.message : "Sessão inválida");
+    sessionOk = true;
+    setSession("TV conectada. Pronta para receber a lista.", "ok");
+    $("send-button").disabled = false;
+  }).catch(function (err) {
+    setSession("Não foi possível falar com a TV.", "error");
+    setStatus((err.message || err) + " — na TV, gere um novo QR e escaneie de novo.", "error");
+  });
+
+  $("pair-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!sessionOk) return;
+    var server, username, password;
+
+    if (listType === "m3u") {
+      var link = withScheme($("m3u").value);
+      if (!link) { setStatus("Cole o endereço da lista M3U.", "error"); $("m3u").focus(); return; }
+      /* A TV reconhece "m3u:" e lê a lista; usuário e senha não são usados. */
+      server = "m3u:" + link;
+      username = "m3u";
+      password = "m3u";
+    } else {
+      server = withScheme($("server").value);
+      username = $("username").value.trim();
+      password = $("password").value;
+      if (!server || !username || !password) {
+        setStatus("Preencha servidor, usuário e senha.", "error");
+        return;
+      }
+    }
+
+    var btn = $("send-button");
+    btn.disabled = true;
+    btn.textContent = "Enviando...";
+    setStatus("Enviando para a TV...");
+    rpc("tv_pair_submit_v2", { p_token: token, p_server: server, p_username: username, p_password: password }).then(function (data) {
+      if (!data || data.ok !== true) throw new Error(data && data.message ? data.message : "Envio recusado");
+      setStatus("Enviado. Olhe para a TV: ela entra em alguns segundos.", "ok");
+      btn.textContent = "Enviar novamente";
+      btn.disabled = false;
+    }).catch(function (err) {
+      setStatus("Falha ao enviar: " + (err.message || err), "error");
+      btn.textContent = "Tentar novamente";
+      btn.disabled = false;
+    });
+  });
 })();
 </script>
-</body></html>
+</body>
+</html>
