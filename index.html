@@ -186,54 +186,54 @@
       </div>
       <div>
         <span class="eyebrow">Sofá TV</span>
-        <h1>Enviar lista para a TV</h1>
+        <h1 data-i18n="h1">Enviar lista para a TV</h1>
       </div>
     </header>
-    <p class="lead">Escolha o tipo da sua lista, preencha e toque em enviar. A TV entra sozinha.</p>
+    <p class="lead" data-i18n="lead">Escolha o tipo da sua lista, preencha e toque em enviar. A TV entra sozinha.</p>
 
     <div id="session-info" class="session" role="status">
-      <span class="session-dot"></span><span id="session-text">Verificando a TV...</span>
+      <span class="session-dot"></span><span id="session-text" data-i18n="checking">Verificando a TV...</span>
     </div>
 
     <form id="pair-form" class="card" autocomplete="off" novalidate>
-      <div class="list-type" role="radiogroup" aria-label="Tipo de lista">
+      <div class="list-type" role="radiogroup" aria-label="Tipo de lista" data-i18n-aria="listType">
         <button type="button" data-type="xtream" role="radio" aria-checked="false">Xtream</button>
         <button type="button" data-type="m3u" role="radio" aria-checked="true">M3U</button>
       </div>
 
       <div id="panel-m3u" class="panel">
         <div class="field">
-          <label for="m3u">Endereço da lista M3U</label>
+          <label for="m3u" data-i18n="m3uLabel">Endereço da lista M3U</label>
           <input id="m3u" type="url" inputmode="url" spellcheck="false" autocapitalize="off"
-                 placeholder="http://servidor.com/lista.m3u">
-          <p class="hint">Links de painel (get.php com usuário e senha) também funcionam: a TV usa o painel direto e traz capas e sinopses.</p>
+                 placeholder="http://servidor.com/lista.m3u" data-i18n-ph="m3uPh">
+          <p class="hint" data-i18n="m3uHint">Links de painel (get.php com usuário e senha) também funcionam: a TV usa o painel direto e traz capas e sinopses.</p>
           <div id="m3u-detected" class="detected"></div>
         </div>
       </div>
 
       <div id="panel-xtream" class="panel" hidden>
         <div class="field">
-          <label for="server">Servidor / Provedor</label>
+          <label for="server" data-i18n="serverLabel">Servidor / Provedor</label>
           <input id="server" type="url" inputmode="url" spellcheck="false" autocapitalize="off"
-                 placeholder="http://servidor.com:porta">
+                 placeholder="http://servidor.com:porta" data-i18n-ph="serverPh">
         </div>
         <div class="field">
-          <label for="username">Usuário</label>
+          <label for="username" data-i18n="user">Usuário</label>
           <input id="username" type="text" autocomplete="username" spellcheck="false" autocapitalize="off"
-                 placeholder="Usuário">
+                 placeholder="Usuário" data-i18n-ph="user">
         </div>
         <div class="field">
-          <label for="password">Senha</label>
-          <input id="password" type="password" autocomplete="current-password" placeholder="Senha">
+          <label for="password" data-i18n="pass">Senha</label>
+          <input id="password" type="password" autocomplete="current-password" placeholder="Senha" data-i18n-ph="pass">
         </div>
       </div>
 
-      <button id="send-button" class="primary" type="submit" disabled>Enviar para a TV</button>
+      <button id="send-button" class="primary" type="submit" disabled data-i18n="send">Enviar para a TV</button>
       <div id="status" class="status" role="status"></div>
 
       <div class="security">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 9.5-4-1.2-7-5-7-9.5V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
-        <span>O QR traz só um código temporário, válido por 15 minutos. Se algo estiver errado, corrija e envie de novo pelo mesmo QR.</span>
+        <span data-i18n="security">O QR traz só um código temporário, válido por 15 minutos. Se algo estiver errado, corrija e envie de novo pelo mesmo QR.</span>
       </div>
     </form>
   </main>
@@ -244,6 +244,141 @@
   var SUPABASE_KEY = "sb_publishable_OgLipmaU1MX_Io8kUmBlZA_7u0HnyFc";
   var token = new URLSearchParams(location.search).get("t") || "";
   var listType = "m3u";
+
+  /* Idioma: o da TV (vem no QR como &lang=), senão o do celular.
+     Português e espanhol quando o celular está neles; o resto, inglês. */
+  var TEXT = {
+    pt: {
+      title: "Sofá TV — Enviar lista",
+      h1: "Enviar lista para a TV",
+      lead: "Escolha o tipo da sua lista, preencha e toque em enviar. A TV entra sozinha.",
+      checking: "Verificando a TV...",
+      listType: "Tipo de lista",
+      m3uLabel: "Endereço da lista M3U",
+      m3uPh: "http://servidor.com/lista.m3u",
+      m3uHint: "Links de painel (get.php com usuário e senha) também funcionam: a TV usa o painel direto e traz capas e sinopses.",
+      serverLabel: "Servidor / Provedor",
+      serverPh: "http://servidor.com:porta",
+      user: "Usuário",
+      pass: "Senha",
+      send: "Enviar para a TV",
+      security: "O QR traz só um código temporário, válido por 15 minutos. Se algo estiver errado, corrija e envie de novo pelo mesmo QR.",
+      noConn: "Sem conexão com o serviço de pareamento.",
+      slow: "O serviço demorou para responder.",
+      detected: "Painel detectado: {server} · usuário {user}",
+      split: "Link de painel separado em servidor, usuário e senha.",
+      noToken: "QR inválido: abra pelo QR da TV.",
+      connected: "TV conectada. Pronta para receber a lista.",
+      cantReach: "Não foi possível falar com a TV.",
+      newQr: "Na TV, gere um novo QR e escaneie de novo.",
+      invalidSession: "Sessão inválida",
+      pasteM3u: "Cole o endereço da lista M3U.",
+      fillAll: "Preencha servidor, usuário e senha.",
+      sending: "Enviando...",
+      sendingTv: "Enviando para a TV...",
+      refused: "Envio recusado",
+      sent: "Enviado. Olhe para a TV: ela entra em alguns segundos.",
+      sendAgain: "Enviar novamente",
+      retry: "Tentar novamente",
+      sendFail: "Falha ao enviar"
+    },
+    en: {
+      title: "Sofá TV — Send your list",
+      h1: "Send your list to the TV",
+      lead: "Choose your list type, fill it in and tap send. The TV signs in on its own.",
+      checking: "Checking the TV...",
+      listType: "List type",
+      m3uLabel: "M3U list address",
+      m3uPh: "http://server.com/list.m3u",
+      m3uHint: "Panel links (get.php with username and password) also work: the TV uses the panel directly and brings covers and synopses.",
+      serverLabel: "Server / Provider",
+      serverPh: "http://server.com:port",
+      user: "Username",
+      pass: "Password",
+      send: "Send to TV",
+      security: "The QR only carries a temporary code, valid for 15 minutes. If something is wrong, fix it and send again with the same QR.",
+      noConn: "No connection to the pairing service.",
+      slow: "The service took too long to respond.",
+      detected: "Panel detected: {server} · user {user}",
+      split: "Panel link split into server, username and password.",
+      noToken: "Invalid QR: open it from the QR code on the TV.",
+      connected: "TV connected. Ready to receive the list.",
+      cantReach: "Couldn't reach the TV.",
+      newQr: "On the TV, generate a new QR and scan it again.",
+      invalidSession: "Invalid session",
+      pasteM3u: "Paste the M3U list address.",
+      fillAll: "Fill in server, username and password.",
+      sending: "Sending...",
+      sendingTv: "Sending to the TV...",
+      refused: "Sending refused",
+      sent: "Sent. Look at the TV: it will sign in within a few seconds.",
+      sendAgain: "Send again",
+      retry: "Try again",
+      sendFail: "Couldn't send"
+    },
+    es: {
+      title: "Sofá TV — Enviar lista",
+      h1: "Enviar lista a la TV",
+      lead: "Elige el tipo de tu lista, complétala y toca enviar. La TV entra sola.",
+      checking: "Verificando la TV...",
+      listType: "Tipo de lista",
+      m3uLabel: "Dirección de la lista M3U",
+      m3uPh: "http://servidor.com/lista.m3u",
+      m3uHint: "Los enlaces de panel (get.php con usuario y contraseña) también funcionan: la TV usa el panel directamente y trae portadas y sinopsis.",
+      serverLabel: "Servidor / Proveedor",
+      serverPh: "http://servidor.com:puerto",
+      user: "Usuario",
+      pass: "Contraseña",
+      send: "Enviar a la TV",
+      security: "El QR solo lleva un código temporal, válido por 15 minutos. Si algo está mal, corrígelo y envía de nuevo con el mismo QR.",
+      noConn: "Sin conexión con el servicio de emparejamiento.",
+      slow: "El servicio tardó en responder.",
+      detected: "Panel detectado: {server} · usuario {user}",
+      split: "Enlace de panel separado en servidor, usuario y contraseña.",
+      noToken: "QR no válido: ábrelo desde el QR de la TV.",
+      connected: "TV conectada. Preparada para recibir la lista.",
+      cantReach: "No se pudo comunicar con la TV.",
+      newQr: "En la TV, genera un nuevo QR y escanéalo de nuevo.",
+      invalidSession: "Sesión no válida",
+      pasteM3u: "Pega la dirección de la lista M3U.",
+      fillAll: "Completa servidor, usuario y contraseña.",
+      sending: "Enviando...",
+      sendingTv: "Enviando a la TV...",
+      refused: "Envío rechazado",
+      sent: "Enviado. Mira la TV: entrará en unos segundos.",
+      sendAgain: "Enviar de nuevo",
+      retry: "Intentar de nuevo",
+      sendFail: "Error al enviar"
+    }
+  };
+
+  function pickLanguage() {
+    var asked = (new URLSearchParams(location.search).get("lang") || "").toLowerCase();
+    if (TEXT[asked]) return asked;
+    var phone = (navigator.languages && navigator.languages[0]) || navigator.language || "";
+    phone = phone.toLowerCase();
+    if (phone.indexOf("pt") === 0) return "pt";
+    if (phone.indexOf("es") === 0) return "es";
+    return "en";
+  }
+  var lang = pickLanguage();
+
+  function t(key, vars) {
+    var text = TEXT[lang][key] || TEXT.pt[key] || key;
+    return text.replace(/\{(\w+)\}/g, function (all, name) { return vars && name in vars ? vars[name] : all; });
+  }
+
+  /* Mensagens do servidor vêm em português: nos outros idiomas fica o
+     texto traduzido do próprio site. */
+  function detail(err, fallback) {
+    return lang === "pt" ? (err && err.message) || String(err) : t(fallback);
+  }
+
+  document.documentElement.lang = { pt: "pt-BR", en: "en", es: "es" }[lang];
+  document.title = t("title");
+  Array.prototype.forEach.call(document.querySelectorAll("[data-i18n]"), function (el) { el.textContent = t(el.getAttribute("data-i18n")); });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-ph]"), function (el) { el.setAttribute("placeholder", t(el.getAttribute("data-i18n-ph"))); });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-aria]"), function (el) { el.setAttribute("aria-label", t(el.getAttribute("data-i18n-aria"))); });
   var sessionOk = false;
 
   function $(id) { return document.getElementById(id); }
@@ -274,8 +409,8 @@
         }
         reject(new Error("HTTP " + x.status + (x.responseText ? " • " + x.responseText.slice(0, 180) : "")));
       };
-      x.onerror = function () { reject(new Error("Sem conexão com o serviço de pareamento.")); };
-      x.ontimeout = function () { reject(new Error("O serviço demorou para responder.")); };
+      x.onerror = function () { reject(new Error(t("noConn"))); };
+      x.ontimeout = function () { reject(new Error(t("slow"))); };
       x.send(JSON.stringify(payload || {}));
     });
   }
@@ -315,7 +450,7 @@
   $("m3u").addEventListener("input", function () {
     var p = panelFromLink($("m3u").value), box = $("m3u-detected");
     box.className = "detected" + (p ? " show" : "");
-    box.textContent = p ? "Painel detectado: " + p.server.replace(/^https?:\/\//, "") + " · usuário " + p.username : "";
+    box.textContent = p ? t("detected", { server: p.server.replace(/^https?:\/\//, ""), user: p.username }) : "";
   });
 
   /* Colou o link inteiro no campo Servidor: separa usuário e senha. */
@@ -325,22 +460,22 @@
     $("server").value = p.server;
     $("username").value = p.username;
     $("password").value = p.password;
-    setStatus("Link de painel separado em servidor, usuário e senha.", "ok");
+    setStatus(t("split"), "ok");
   });
 
   if (!token) {
-    setSession("QR inválido: abra pelo QR da TV.", "error");
+    setSession(t("noToken"), "error");
     return;
   }
 
   rpc("tv_pair_check_v2", { p_token: token }).then(function (data) {
-    if (!data || data.ok !== true) throw new Error(data && data.message ? data.message : "Sessão inválida");
+    if (!data || data.ok !== true) throw new Error(data && data.message ? data.message : t("invalidSession"));
     sessionOk = true;
-    setSession("TV conectada. Pronta para receber a lista.", "ok");
+    setSession(t("connected"), "ok");
     $("send-button").disabled = false;
   }).catch(function (err) {
-    setSession("Não foi possível falar com a TV.", "error");
-    setStatus((err.message || err) + " — na TV, gere um novo QR e escaneie de novo.", "error");
+    setSession(t("cantReach"), "error");
+    setStatus(lang === "pt" ? detail(err) + " — " + t("newQr").charAt(0).toLowerCase() + t("newQr").slice(1) : t("newQr"), "error");
   });
 
   $("pair-form").addEventListener("submit", function (e) {
@@ -350,7 +485,7 @@
 
     if (listType === "m3u") {
       var link = withScheme($("m3u").value);
-      if (!link) { setStatus("Cole o endereço da lista M3U.", "error"); $("m3u").focus(); return; }
+      if (!link) { setStatus(t("pasteM3u"), "error"); $("m3u").focus(); return; }
       /* A TV reconhece "m3u:" e lê a lista; usuário e senha não são usados. */
       server = "m3u:" + link;
       username = "m3u";
@@ -360,23 +495,23 @@
       username = $("username").value.trim();
       password = $("password").value;
       if (!server || !username || !password) {
-        setStatus("Preencha servidor, usuário e senha.", "error");
+        setStatus(t("fillAll"), "error");
         return;
       }
     }
 
     var btn = $("send-button");
     btn.disabled = true;
-    btn.textContent = "Enviando...";
-    setStatus("Enviando para a TV...");
+    btn.textContent = t("sending");
+    setStatus(t("sendingTv"));
     rpc("tv_pair_submit_v2", { p_token: token, p_server: server, p_username: username, p_password: password }).then(function (data) {
-      if (!data || data.ok !== true) throw new Error(data && data.message ? data.message : "Envio recusado");
-      setStatus("Enviado. Olhe para a TV: ela entra em alguns segundos.", "ok");
-      btn.textContent = "Enviar novamente";
+      if (!data || data.ok !== true) throw new Error(data && data.message ? data.message : t("refused"));
+      setStatus(t("sent"), "ok");
+      btn.textContent = t("sendAgain");
       btn.disabled = false;
     }).catch(function (err) {
-      setStatus("Falha ao enviar: " + (err.message || err), "error");
-      btn.textContent = "Tentar novamente";
+      setStatus(t("sendFail") + ": " + detail(err, "refused"), "error");
+      btn.textContent = t("retry");
       btn.disabled = false;
     });
   });
