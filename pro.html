@@ -54,6 +54,21 @@
     .perks li { position: relative; padding-left: 24px; margin-bottom: 8px; }
     .perks li::before { content: ""; position: absolute; left: 2px; top: 5px; width: 10px; height: 6px; border-left: 2px solid var(--c-success); border-bottom: 2px solid var(--c-success); transform: rotate(-45deg); }
     .fine { margin: 16px 0 0; color: var(--c-text-3); font-size: 12.5px; text-align: center; }
+    .help { margin-top: 18px; }
+    .chat-list { display: flex; flex-direction: column; gap: 8px; max-height: 52vh; margin: 14px 0 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .chat-list:empty { display: none; }
+    .bubble { max-width: 86%; padding: 10px 13px; border-radius: 14px; background: var(--c-surface-2); }
+    .bubble p { margin: 0; color: var(--c-text); white-space: pre-wrap; word-wrap: break-word; }
+    .bubble.user { align-self: flex-end; border-bottom-right-radius: 4px; background: var(--c-accent-soft); }
+    .bubble.support { align-self: flex-start; border-bottom-left-radius: 4px; }
+    .bubble-meta { display: block; margin-top: 4px; color: var(--c-text-3); font-size: 11.5px; }
+    .chat-status { margin: 10px 0 0; color: var(--c-text-3); font-size: 13px; }
+    .chat-status:empty { display: none; }
+    .chat-status.error { color: #ffb3b5; }
+    .chat-form textarea { display: block; width: 100%; min-height: 84px; margin: 14px 0 10px; padding: 12px 14px; border: 2px solid var(--c-line); border-radius: 14px; background: var(--c-bg); color: var(--c-text); font: inherit; resize: vertical; }
+    .chat-form textarea:focus { outline: none; border-color: var(--c-accent); }
+    .chat-form .primary { height: 48px; line-height: 48px; font-size: 15px; }
+    .link-button { display: block; margin: 12px auto 0; padding: 6px; border: 0; background: none; color: var(--c-text-2); font: inherit; font-size: 13.5px; text-decoration: underline; cursor: pointer; }
     .hidden { display: none !important; }
   </style>
 </head>
@@ -77,7 +92,7 @@
       <a id="pay" class="primary" href="#" rel="noopener"></a>
       <ul class="perks">
         <li data-i18n="perk1">Todos os recursos do Sofá TV, sem limite</li>
-        <li data-i18n="perk2">Vale para esta TV (1 TV por assinatura)</li>
+        <li data-i18n="perk2">Vale para esta TV</li>
         <li data-i18n="perk3">Renovação automática. Cancele quando quiser</li>
       </ul>
       <p class="fine" data-i18n="secure">Pagamento seguro pela Stripe.</p>
@@ -93,6 +108,21 @@
     <section id="thanks" class="card hidden">
       <h2 data-i18n="thanksTitle">Pagamento recebido!</h2>
       <p data-i18n="thanksText">A TV libera sozinha em alguns segundos. Pode voltar para o sofá.</p>
+    </section>
+
+    <section id="help" class="card help hidden">
+      <h2 data-i18n="helpTitle">Precisa de ajuda?</h2>
+      <p data-i18n="helpText">Fale com o suporte por aqui. A resposta aparece nesta página.</p>
+      <button id="chat-open" class="secondary" type="button" data-i18n="openChat">Falar com o suporte</button>
+      <div id="chat-box" class="hidden">
+        <div id="chat-list" class="chat-list" aria-live="polite"></div>
+        <p id="chat-status" class="chat-status"></p>
+        <form id="chat-form" class="chat-form">
+          <textarea id="chat-text" maxlength="2000" data-i18n-placeholder="placeholder"></textarea>
+          <button id="chat-send" class="primary" type="submit" data-i18n="send">Enviar</button>
+        </form>
+        <button id="chat-resolve" class="link-button hidden" type="button" data-i18n="resolve">Resolvido, obrigado</button>
+      </div>
     </section>
 
     <section id="problem" class="card hidden">
@@ -120,14 +150,21 @@
       annual: "Anual", semiannual: "Semestral", quarterly: "Trimestral", best: "Mais vantajoso",
       per_annual: "por ano", per_semiannual: "a cada 6 meses", per_quarterly: "a cada 3 meses",
       monthly: "equivale a {m} por mês", pay: "Assinar · {p}", soon: "Pagamento disponível em breve",
-      perk1: "Todos os recursos do Sofá TV, sem limite", perk2: "Vale para esta TV (1 TV por assinatura)",
+      perk1: "Todos os recursos do Sofá TV, sem limite", perk2: "Vale para esta TV",
       perk3: "Renovação automática. Cancele quando quiser", secure: "Pagamento seguro pela Stripe.",
-      activeTitle: "O Pro está ativo nesta TV", mine: "Sua assinatura", noPortal: "Para trocar o cartão ou cancelar, fale com o suporte pelo e-mail do recibo.", renews: "{plan} · renova em {d}", until: "{plan} · válido até {d}",
+      activeTitle: "O Pro está ativo nesta TV", mine: "Sua assinatura", noPortal: "Para trocar o cartão ou cancelar, fale com o suporte aqui embaixo.", renews: "{plan} · renova em {d}", until: "{plan} · válido até {d}",
       manage: "Gerenciar assinatura", thanksTitle: "Pagamento recebido!",
       thanksText: "A TV libera sozinha em alguns segundos. Pode voltar para o sofá.",
       problemTitle: "Não encontramos esta TV", problemText: "Abra de novo o QR Code mostrado na tela da TV.",
       trial: "Teste grátis até {d}", expired: "O teste grátis desta TV terminou", active: "Pro ativo",
-      tv: "TV {c}", offline: "Sem conexão. Tente de novo."
+      tv: "TV {c}", offline: "Sem conexão. Tente de novo.",
+      helpTitle: "Precisa de ajuda?", helpText: "Fale com o suporte por aqui. A resposta aparece nesta página.",
+      openChat: "Falar com o suporte", placeholder: "Escreva sua mensagem", send: "Enviar", sending: "Enviando…",
+      you: "Você", support: "Suporte", edited: "editada", resolve: "Resolvido, obrigado",
+      waiting: "Mensagem enviada. A resposta aparece aqui; pode fechar e voltar pelo QR da TV.",
+      resolved: "Conversa encerrada. Escreva de novo se precisar.",
+      rate: "Muitas mensagens seguidas. Espere alguns minutos.", busy: "O suporte está cheio agora. Tente de novo em uma hora.",
+      chatError: "Não foi possível enviar. Tente de novo."
     },
     en: {
       title: "Get Sofá TV Pro", checking: "Checking your TV…",
@@ -135,14 +172,21 @@
       annual: "Yearly", semiannual: "6 months", quarterly: "3 months", best: "Best value",
       per_annual: "per year", per_semiannual: "every 6 months", per_quarterly: "every 3 months",
       monthly: "about {m} per month", pay: "Subscribe · {p}", soon: "Payment available soon",
-      perk1: "Every Sofá TV feature, no limits", perk2: "For this TV (1 TV per subscription)",
+      perk1: "Every Sofá TV feature, no limits", perk2: "For this TV",
       perk3: "Renews automatically. Cancel anytime", secure: "Secure payment by Stripe.",
-      activeTitle: "Pro is active on this TV", mine: "Your subscription", noPortal: "To change your card or cancel, reply to the receipt email.", renews: "{plan} · renews on {d}", until: "{plan} · valid until {d}",
+      activeTitle: "Pro is active on this TV", mine: "Your subscription", noPortal: "To change your card or cancel, contact support below.", renews: "{plan} · renews on {d}", until: "{plan} · valid until {d}",
       manage: "Manage subscription", thanksTitle: "Payment received!",
       thanksText: "The TV unlocks by itself in a few seconds. Back to the couch.",
       problemTitle: "We couldn't find this TV", problemText: "Scan the QR code on the TV screen again.",
       trial: "Free trial until {d}", expired: "This TV's free trial has ended", active: "Pro active",
-      tv: "TV {c}", offline: "No connection. Try again."
+      tv: "TV {c}", offline: "No connection. Try again.",
+      helpTitle: "Need help?", helpText: "Chat with support here. The reply shows up on this page.",
+      openChat: "Contact support", placeholder: "Write your message", send: "Send", sending: "Sending…",
+      you: "You", support: "Support", edited: "edited", resolve: "Solved, thanks",
+      waiting: "Message sent. The reply shows up here; you can close and come back with the TV's QR code.",
+      resolved: "Conversation closed. Write again if you need anything.",
+      rate: "Too many messages in a row. Wait a few minutes.", busy: "Support is busy right now. Try again in an hour.",
+      chatError: "Couldn't send. Try again."
     },
     es: {
       title: "Suscríbete a Sofá TV Pro", checking: "Verificando tu TV…",
@@ -150,14 +194,21 @@
       annual: "Anual", semiannual: "Semestral", quarterly: "Trimestral", best: "Más conveniente",
       per_annual: "por año", per_semiannual: "cada 6 meses", per_quarterly: "cada 3 meses",
       monthly: "equivale a {m} por mes", pay: "Suscribirse · {p}", soon: "Pago disponible pronto",
-      perk1: "Todas las funciones de Sofá TV, sin límites", perk2: "Para esta TV (1 TV por suscripción)",
+      perk1: "Todas las funciones de Sofá TV, sin límites", perk2: "Para esta TV",
       perk3: "Renovación automática. Cancela cuando quieras", secure: "Pago seguro con Stripe.",
-      activeTitle: "Pro está activo en esta TV", mine: "Tu suscripción", noPortal: "Para cambiar la tarjeta o cancelar, responde el correo del recibo.", renews: "{plan} · se renueva el {d}", until: "{plan} · válido hasta {d}",
+      activeTitle: "Pro está activo en esta TV", mine: "Tu suscripción", noPortal: "Para cambiar la tarjeta o cancelar, habla con soporte aquí abajo.", renews: "{plan} · se renueva el {d}", until: "{plan} · válido hasta {d}",
       manage: "Administrar suscripción", thanksTitle: "¡Pago recibido!",
       thanksText: "La TV se desbloquea sola en unos segundos. Vuelve al sofá.",
       problemTitle: "No encontramos esta TV", problemText: "Escanea de nuevo el código QR de la pantalla de la TV.",
       trial: "Prueba gratis hasta {d}", expired: "La prueba gratis de esta TV terminó", active: "Pro activo",
-      tv: "TV {c}", offline: "Sin conexión. Inténtalo de nuevo."
+      tv: "TV {c}", offline: "Sin conexión. Inténtalo de nuevo.",
+      helpTitle: "¿Necesitas ayuda?", helpText: "Habla con soporte aquí. La respuesta aparece en esta página.",
+      openChat: "Hablar con soporte", placeholder: "Escribe tu mensaje", send: "Enviar", sending: "Enviando…",
+      you: "Tú", support: "Soporte", edited: "editado", resolve: "Resuelto, gracias",
+      waiting: "Mensaje enviado. La respuesta aparece aquí; puedes cerrar y volver con el QR de la TV.",
+      resolved: "Conversación cerrada. Escribe de nuevo si lo necesitas.",
+      rate: "Demasiados mensajes seguidos. Espera unos minutos.", busy: "Soporte está lleno ahora. Inténtalo en una hora.",
+      chatError: "No se pudo enviar. Inténtalo de nuevo."
     }
   };
   var LOCALE = { pt: "pt-BR", en: "en", es: "es" };
@@ -270,6 +321,126 @@
     show("buy", true);
   }
 
+  /* ---- Chat de suporte ------------------------------------------------
+     Mesmo formato das extensões: cada pergunta é uma linha e a resposta fica
+     presa a ela (`reply`); a conversa é montada como uma linha do tempo só
+     (cópia do support-thread.js). Fala com a função sofatv-support. */
+  var SUPPORT_URL = SUPABASE_URL + "/functions/v1/sofatv-support";
+  var chatRows = [], chatOpen = false, chatTimer = null, chatNote = "";
+
+  function supportCall(action, extra) {
+    var body = { action: action, key: key };
+    for (var k in extra || {}) body[k] = extra[k];
+    return fetch(SUPPORT_URL, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) { var e = new Error(j.error || "HTTP " + r.status); e.code = j.error; throw e; }
+        return j;
+      });
+    });
+  }
+  function filled(v) { return typeof v === "string" && v.trim() !== ""; }
+  function stamp(v) { return Date.parse(v || "") || 0; }
+  function previousReplies(row) {
+    var h = row && row.reply_history;
+    if (typeof h === "string") { try { h = JSON.parse(h); } catch (e) { h = []; } }
+    return Array.isArray(h) ? h.filter(function (i) { return i && filled(i.text); }) : [];
+  }
+  function buildThread(rows) {
+    var events = [];
+    rows.forEach(function (row) {
+      if (filled(row.message)) events.push({ author: "user", text: row.message, at: stamp(row.created_at) });
+      if (filled(row.reply)) {
+        var prev = previousReplies(row);
+        events.push({ author: "support", text: row.reply,
+          at: (prev[0] && stamp(prev[0].replied_at)) || stamp(row.replied_at) || stamp(row.created_at),
+          edited: prev.length > 0 });
+      }
+    });
+    return events.map(function (e, i) { return { e: e, i: i }; })
+      .sort(function (a, b) { return a.e.at - b.e.at || a.i - b.i; })
+      .map(function (x) { return x.e; });
+  }
+  function when(ms) {
+    var d = new Date(ms);
+    var today = new Date().toDateString() === d.toDateString();
+    return today ? d.toLocaleTimeString(LOCALE[lang], { hour: "2-digit", minute: "2-digit" })
+      : d.toLocaleDateString(LOCALE[lang], { day: "2-digit", month: "2-digit" }) + " " +
+        d.toLocaleTimeString(LOCALE[lang], { hour: "2-digit", minute: "2-digit" });
+  }
+  function chatStatus(text, error) {
+    $("chat-status").textContent = text || "";
+    $("chat-status").className = "chat-status" + (error ? " error" : "");
+  }
+  function renderChat() {
+    var list = $("chat-list"), events = buildThread(chatRows);
+    list.innerHTML = "";
+    events.forEach(function (ev) {
+      var b = document.createElement("div");
+      b.className = "bubble " + ev.author;
+      var p = document.createElement("p");
+      p.textContent = ev.text;
+      var meta = document.createElement("span");
+      meta.className = "bubble-meta";
+      meta.textContent = t(ev.author === "user" ? "you" : "support") + " · " + when(ev.at) + (ev.edited ? " · " + t("edited") : "");
+      b.appendChild(p); b.appendChild(meta); list.appendChild(b);
+    });
+    list.scrollTop = list.scrollHeight;
+    var open = chatRows.some(function (r) { return filled(r.message) && !r.resolved; });
+    var last = events[events.length - 1];
+    show("chat-resolve", open && !!last && last.author === "support");
+    if (chatNote) chatStatus(chatNote, true);
+    else chatStatus(open && last && last.author === "user" ? t("waiting") : !open && events.length ? t("resolved") : "");
+  }
+  function loadChat() {
+    return supportCall("check").then(function (r) {
+      chatRows = r.messages || [];
+      if (!chatOpen && chatRows.some(function (row) { return filled(row.message) && !row.resolved; })) openChat();
+      if (chatOpen) renderChat();
+    }, function () {});
+  }
+  function openChat() {
+    if (chatOpen) return;
+    chatOpen = true;
+    show("chat-open", false);
+    show("chat-box", true);
+    renderChat();
+    // Enquanto a página está aberta e visível, a resposta aparece sozinha.
+    chatTimer = setInterval(function () { if (document.visibilityState !== "hidden") loadChat(); }, 15000);
+  }
+  function setupChat() {
+    show("help", true);
+    $("chat-text").placeholder = t("placeholder");
+    $("chat-open").addEventListener("click", function () { openChat(); $("chat-text").focus(); });
+    $("chat-form").addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var text = $("chat-text").value.trim();
+      if (!text) return;
+      var button = $("chat-send");
+      button.disabled = true;
+      button.textContent = t("sending");
+      chatNote = "";
+      supportCall("send", { message: text, version: "phone" }).then(function () {
+        $("chat-text").value = "";
+        return loadChat();
+      }, function (e) {
+        chatNote = t(e.code === "rate" ? "rate" : e.code === "busy" ? "busy" : "chatError");
+        renderChat();
+      }).then(function () {
+        button.disabled = false;
+        button.textContent = t("send");
+      });
+    });
+    $("chat-resolve").addEventListener("click", function () {
+      supportCall("resolve").then(loadChat, function () {});
+    });
+    document.addEventListener("visibilitychange", function () {
+      if (chatOpen && document.visibilityState === "visible") loadChat();
+    });
+    loadChat();
+  }
+
   document.documentElement.lang = LOCALE[lang];
   Array.prototype.forEach.call(document.querySelectorAll("[data-i18n]"), function (node) {
     node.textContent = t(node.getAttribute("data-i18n"));
@@ -280,6 +451,7 @@
   rpc("sofatv_checkout", { p_key: key }).then(function (result) {
     data = result;
     render();
+    if (data && data.status && data.status !== "invalid") setupChat();
   }, function () { session(t("offline"), "error"); });
 })();
 </script>
