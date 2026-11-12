@@ -1,0 +1,39 @@
+#EXTM3U
+# Sofá TV — lista de demonstração (para avaliação do app).
+# Só conteúdo de uso livre:
+#  - TV Câmara e TV Brasil: canais públicos, transmissão oficial aberta.
+#  - Canais de teste: streams de teste publicados para desenvolvedores (Apple, Unified Streaming).
+#  - Filmes: filmes abertos da Blender Foundation (Creative Commons BY), via Internet Archive.
+#  - Série: curtas de Charlie Chaplin de 1916, em domínio público, via Internet Archive.
+
+#EXTINF:-1 tvg-id="tvcamara" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/TV_C%C3%A2mara_logo_2018.png/330px-TV_C%C3%A2mara_logo_2018.png" group-title="Canais públicos",TV Câmara
+https://stream3.camara.gov.br/tv1/manifest.m3u8
+#EXTINF:-1 tvg-id="tvbrasil" group-title="Canais públicos",TV Brasil
+https://tvbrasil-stream.ebc.com.br/index.m3u8
+
+#EXTINF:-1 group-title="Canais de teste",Teste HLS (Apple)
+https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8
+#EXTINF:-1 group-title="Canais de teste",Teste HLS 16:9 (Apple)
+https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8
+#EXTINF:-1 group-title="Canais de teste",Tears of Steel (HLS)
+https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8
+
+#EXTINF:-1 tvg-logo="https://archive.org/services/img/BigBuckBunny_124" group-title="Filmes abertos (Blender)",Big Buck Bunny (2008)
+https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4
+#EXTINF:-1 tvg-logo="https://archive.org/services/img/ElephantsDream" group-title="Filmes abertos (Blender)",Elephants Dream (2006)
+https://archive.org/download/ElephantsDream/ed_hd.mp4
+#EXTINF:-1 tvg-logo="https://archive.org/services/img/Sintel" group-title="Filmes abertos (Blender)",Sintel (2010)
+https://archive.org/download/Sintel/sintel-2048-surround.mp4
+#EXTINF:-1 tvg-logo="https://archive.org/services/img/Tears-of-Steel" group-title="Filmes abertos (Blender)",Tears of Steel (2012)
+https://archive.org/download/Tears-of-Steel/tears_of_steel_720p.mp4
+
+#EXTINF:-1 tvg-logo="https://archive.org/services/img/CC_1916_05_15_TheFloorwalker" group-title="Clássicos em domínio público",Chaplin 1916 S01E01 The Floorwalker
+https://archive.org/download/CC_1916_05_15_TheFloorwalker/CC_1916_05_15_TheFloorwalker_512kb.mp4
+#EXTINF:-1 tvg-logo="https://archive.org/services/img/CC_1916_06_12_TheFireman" group-title="Clássicos em domínio público",Chaplin 1916 S01E02 The Fireman
+https://archive.org/download/CC_1916_06_12_TheFireman/CC_1916_06_12_TheFireman_512kb.mp4
+#EXTINF:-1 tvg-logo="https://archive.org/services/img/CC_1916_07_10_TheVagabond" group-title="Clássicos em domínio público",Chaplin 1916 S01E03 The Vagabond
+https://archive.org/download/CC_1916_07_10_TheVagabond/CC_1916_07_10_TheVagabond.mp4
+#EXTINF:-1 tvg-logo="https://archive.org/services/img/CC_1916_09_04_TheCount" group-title="Clássicos em domínio público",Chaplin 1916 S01E04 The Count
+https://archive.org/download/CC_1916_09_04_TheCount/CC_1916_09_04_TheCount_512kb.mp4
+#EXTINF:-1 tvg-logo="https://archive.org/services/img/CC_1916_10_02_ThePawnshop" group-title="Clássicos em domínio público",Chaplin 1916 S01E05 The Pawnshop
+https://archive.org/download/CC_1916_10_02_ThePawnshop/CC_1916_10_02_ThePawnshop_512kb.mp4
