@@ -48,20 +48,21 @@
       <li>Your favorites, viewing history, hidden items and settings.</li>
       <li>The local network addresses you add to browse shared files.</li>
     </ul>
-    <p>Video plays directly from the sources you choose (your playlists, USB drives, your local network or free-to-air TV). We do not receive or see what you watch.</p>
+    <p>Video plays directly from the sources you choose (your playlists, USB drives, your local network or free-to-air TV). We do not receive a record of what you watch. The only exception is the name of a recently watched item when the TV needs a card image for it, as described below.</p>
 
     <h2>2. Data we receive</h2>
     <p><strong>Free trial and subscription check.</strong> To grant the free trial and check whether this TV has an active Sofá TV Pro subscription, the app sends our server the TV's device identifier (DUID, or the network MAC address if the DUID is not available), the TV model and the app version. The identifier is stored only as an irreversible SHA-256 hash, together with the trial dates and the date of the last check. A short code derived from it is shown on the subscription screen so that you and our support can identify your TV.</p>
     <p><strong>Subscription purchase.</strong> Sofá TV Pro is purchased on your phone, on a payment page operated by Stripe. Your payment details are handled by Stripe and are never shared with us. We receive from Stripe your email address, the plan, the subscription status and expiry date, and the Stripe subscription identifier, and link them to your TV's code.</p>
     <p><strong>Support chat.</strong> If you contact us through the support chat on the subscription page, we store your messages and our replies, linked to your TV's code.</p>
     <p><strong>Setting up a playlist with your phone.</strong> If you use the QR code to send a playlist from your phone to the TV, the details you type on the phone pass through our pairing service only to reach your TV. They are deleted as soon as the TV receives them, and the pairing code expires after 15 minutes.</p>
+    <p><strong>Smart Hub preview.</strong> Sofá TV shows your recently watched items in the row above its icon on the Samsung Smart Hub. When an item has no image of its own, the TV asks our server to draw a card with the item's name. The request contains only the name, a short label (for example, the channel number) and the type of item, and nothing that identifies your TV, your account or your subscription. We do not store these images or link them to you. Our hosting provider keeps routine technical logs of these requests, which include the item name and your IP address, for a few days at most, and we use them only to fix errors.</p>
 
     <h2>3. How we use it</h2>
     <p>Only to provide the free trial and the subscription, to answer support requests and to prevent abuse of the free trial. We do not sell, rent or share your data for advertising.</p>
 
     <h2>4. Service providers</h2>
     <ul>
-      <li><strong>Supabase</strong>, which hosts our server and database.</li>
+      <li><strong>Supabase</strong>, which hosts our server and database and draws the Smart Hub card images.</li>
       <li><strong>Stripe</strong>, which processes subscription payments.</li>
       <li><strong>GitHub Pages</strong>, which hosts the phone pages opened from the QR codes.</li>
     </ul>
