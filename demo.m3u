@@ -1,22 +1,21 @@
 #EXTM3U
 # Sofá TV — lista de demonstração (para avaliação do app).
 # Só conteúdo de uso livre:
-#  - TV Câmara e TV Brasil: canais públicos, transmissão oficial aberta.
-#  - Canais de teste: streams de teste publicados para desenvolvedores (Apple, Unified Streaming).
+#  - TV Brasil: canal público (EBC), transmissão oficial aberta.
+#  - Canais de teste: streams de teste publicados para desenvolvedores (Apple, Mux).
+#    O "16:9" tem várias faixas de áudio e legendas.
 #  - Filmes: filmes abertos da Blender Foundation (Creative Commons BY), via Internet Archive.
 #  - Série: curtas de Charlie Chaplin de 1916, em domínio público, via Internet Archive.
 
-#EXTINF:-1 tvg-id="tvcamara" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/TV_C%C3%A2mara_logo_2018.png/330px-TV_C%C3%A2mara_logo_2018.png" group-title="Canais públicos",TV Câmara
-https://stream3.camara.gov.br/tv1/manifest.m3u8
 #EXTINF:-1 tvg-id="tvbrasil" group-title="Canais públicos",TV Brasil
 https://tvbrasil-stream.ebc.com.br/index.m3u8
 
 #EXTINF:-1 group-title="Canais de teste",Teste HLS (Apple)
 https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8
-#EXTINF:-1 group-title="Canais de teste",Teste HLS 16:9 (Apple)
+#EXTINF:-1 group-title="Canais de teste",Teste 16:9 com legendas (Apple)
 https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8
-#EXTINF:-1 group-title="Canais de teste",Tears of Steel (HLS)
-https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8
+#EXTINF:-1 group-title="Canais de teste",Big Buck Bunny (HLS)
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 
 #EXTINF:-1 tvg-logo="https://archive.org/services/img/BigBuckBunny_124" group-title="Filmes abertos (Blender)",Big Buck Bunny (2008)
 https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4
